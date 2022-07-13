@@ -11,16 +11,17 @@ creds = DefaultAzureCredential()
 service_client = BlobServiceClient(account_url=account_url,credential=creds)
 
 @router.get("")
-async def read_work():
+async def download():
     container_name="workanalysis"
-    blob_name = f'지역별/총괄_고용형태_지역.csv'
+    blob_name = f'한국_산업_인력_공단/raw_data/총괄_고용형태_지역.csv'
     blob_url = f"{account_url}/{container_name}/{blob_name}"
-
-    blob_client = BlobClient.from_blob_url(blob_url=blob_url,credential=creds)
-    blob_download = blob_client.download_blob()
-
+    
+    blob = BlobClient.from_blob_url(blob_url=blob_url,credential=creds)
+    
     try:
-        blob_download.readall()
-        return 1
+        with open("./data/총괄_고용형태_지역.csv", "wb") as my_blob:
+            blob_data = blob.download_blob()
+            blob_data.readinto(my_blob)
+            return f"https://hyperlogic.blob.core.windows.net//workanalysis/한국_산업_인력_공단/raw_data/총괄_고용형태_지역.csv"
     except HTTPException:
         HTTPException(status_code=404,detail="File not found")
