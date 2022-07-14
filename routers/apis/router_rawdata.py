@@ -25,3 +25,5 @@ async def download():
             return f"https://hyperlogic.blob.core.windows.net//workanalysis/한국_산업_인력_공단/raw_data/총괄_고용형태_지역.csv"
     except HTTPException:
         HTTPException(status_code=404,detail="File not found")
+
+        

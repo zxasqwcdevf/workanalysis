@@ -41,3 +41,18 @@ async def read_workpeople():
         return f"https://hyperlogic.blob.core.windows.net/work_analysis/한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.csv"
     except HTTPException:
         HTTPException(status_code=404,detail="File not found")
+
+@router.get("/test/", description='구인동향 분석')
+async def read_workpeople():
+    container_name="workanalysis"
+    blob_name = f'한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.csv'
+    blob_url = f"{account_url}/{container_name}/{blob_name}"
+
+    blob_client = BlobClient.from_blob_url(blob_url=blob_url,credential=creds)
+    blob_download = blob_client.download_blob()
+
+    try:
+        blob_download.readall()
+        return f"https://hyperlogic.blob.core.windows.net/work_analysis/한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.csv"
+    except HTTPException:
+        HTTPException(status_code=404,detail="File not found")
