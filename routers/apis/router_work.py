@@ -45,7 +45,7 @@ async def read_workpeople():
 @router.get("/test/", description='구인동향 분석')
 async def read_workpeople():
     container_name="workanalysis"
-    blob_name = f'한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.csv'
+    blob_name = f'한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.json'
     blob_url = f"{account_url}/{container_name}/{blob_name}"
 
     blob_client = BlobClient.from_blob_url(blob_url=blob_url,credential=creds)
@@ -53,6 +53,6 @@ async def read_workpeople():
 
     try:
         blob_download.readall()
-        return f"https://hyperlogic.blob.core.windows.net/work_analysis/한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.csv"
+        return f"https://hyperlogic.blob.core.windows.net/work_analysis/한국_산업_인력_공단/구인_동향_분석/구인구직_연월_지역.json"
     except HTTPException:
         HTTPException(status_code=404,detail="File not found")
