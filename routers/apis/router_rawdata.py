@@ -10,7 +10,7 @@ account_url = "https://hyperlogic.blob.core.windows.net/"
 creds = DefaultAzureCredential()
 service_client = BlobServiceClient(account_url=account_url,credential=creds)
 
-@router.get("")
+@router.get("/raw_data")
 async def download():
     container_name="workanalysis"
     blob_name = f'한국_산업_인력_공단/raw_data/총괄_고용형태_지역.csv'
