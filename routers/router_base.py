@@ -6,4 +6,4 @@ api_router = APIRouter()
 
 api_router.include_router(router_rawdata.router, prefix="/raw_data", tags=["data"])
 
-api_router.include_router(router_work.router, prefix="/work", tags=["work"])
+api_router.include_router(router_jobSearch.router, prefix="/jobSearch", tags=["jobSearch"])

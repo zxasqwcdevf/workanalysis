@@ -19,7 +19,7 @@ async def download():
     blob = BlobClient.from_blob_url(blob_url=blob_url,credential=creds)
     
     try:
-        with open("./data/총괄_고용형태_지역.csv", "wb") as my_blob:
+        with open("./총괄_고용형태_지역.csv", "wb") as my_blob:
             blob_data = blob.download_blob()
             blob_data.readinto(my_blob)
             return f"https://hyperlogic.blob.core.windows.net//workanalysis/한국_산업_인력_공단/raw_data/총괄_고용형태_지역.csv"
