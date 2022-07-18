@@ -65,7 +65,7 @@ def aged(db:Session,year:str,month:str):
 	    "2_구직취업현황_연령"."월", 
 	    "2_구직취업현황_연령"."연령", 
 	    "2_구직취업현황_연령"."구직건수", 
-	    "2_구직취업현황_연령"."취업건수"
+	    "2_구직취업현황_연령"."취업건수" *-1 AS "취업건수"
     FROM
 	    "인력수급현황"."2_구직취업현황_연령"
     WHERE
@@ -77,17 +77,50 @@ def aged(db:Session,year:str,month:str):
     result = [r._asdict() for r in data]
     return result 
 
-def job(db:Session):
+def jobed_mid(db:Session,year:str,month:str):
     sql = f"""
     SELECT
+	    "7.구인구직취업현황_직업분류"."연도", 
+	    "7.구인구직취업현황_직업분류"."월", 
+	    "7.구인구직취업현황_직업분류"."직종_중분류", 
+	    SUM("7.구인구직취업현황_직업분류"."구인인원(월)") AS 구인인원합계, 
+	    SUM("7.구인구직취업현황_직업분류"."구직건수(월)") AS 구직건수합계, 
+	    SUM("7.구인구직취업현황_직업분류"."취업건수(월)") AS 취업건수합계
     FROM
+	    "인력수급현황"."7.구인구직취업현황_직업분류"
+    WHERE
+	    "7.구인구직취업현황_직업분류"."연도" = '{year}' AND
+	    "7.구인구직취업현황_직업분류"."월" = '{month}'
     GROUP BY
-    ORDER BY
+	    "7.구인구직취업현황_직업분류"."직종_중분류",
+        "7.구인구직취업현황_직업분류"."연도", 
+	    "7.구인구직취업현황_직업분류"."월"
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
     result = [r._asdict() for r in data]
     return result
+
+def jobed(db:Session,year:str,month:str):
+    sql = f"""
+    SELECT
+	    "7.구인구직취업현황_직업분류"."직종_소분류", 
+	    "7.구인구직취업현황_직업분류"."직종_중분류", 
+	    "7.구인구직취업현황_직업분류"."연도", 
+	    "7.구인구직취업현황_직업분류"."월", 
+	    "7.구인구직취업현황_직업분류"."구인인원(월)", 
+	    "7.구인구직취업현황_직업분류"."구직건수(월)", 
+	    "7.구인구직취업현황_직업분류"."취업건수(월)"
+    FROM
+	    "인력수급현황"."7.구인구직취업현황_직업분류"
+    WHERE
+	    "7.구인구직취업현황_직업분류"."연도" = '{year}' AND
+	    "7.구인구직취업현황_직업분류"."월" = '{month}'
+    """
+    sql_result = db.execute(sql)
+    data = sql_result.fetchall()
+    result = [r._asdict() for r in data]
+    return result 
 
 
 def educationed(db:Session,year:str,month:str):
