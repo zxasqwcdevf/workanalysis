@@ -41,17 +41,27 @@ def industried(db:Session, year:str, month:str):
 
 def gendered(db:Session,year:str, month:str):
     sql = f"""
-    SELECT
-	    "1_구직취업현황_성별"."연도", 
-	    "1_구직취업현황_성별"."월", 
-	    "1_구직취업현황_성별"."성별", 
-	    "1_구직취업현황_성별"."구직건수", 
-	    "1_구직취업현황_성별"."취업건수" *-1 AS "취업건수"
-    FROM
-	    "인력수급현황"."1_구직취업현황_성별"
-    WHERE
-	    "1_구직취업현황_성별"."연도" = '{year}' AND
-	    "1_구직취업현황_성별"."월" = '{month}'
+     SELECT
+        CASE
+            WHEN "구인구직취업현황_성별"."성별"::text = '남'::text THEN 1
+            WHEN "구인구직취업현황_성별"."성별"::text = '여'::text THEN 2
+            WHEN "구인구직취업현황_성별"."성별"::text = '무관'::text THEN 3
+            ELSE NULL::integer
+        END AS code,
+    "구인구직취업현황_성별"."연도",
+    "구인구직취업현황_성별"."월",
+    "구인구직취업현황_성별"."성별",
+    "구인구직취업현황_성별"."구직건수",
+    "구인구직취업현황_성별"."취업건수" *-1 AS "취업건수"
+   FROM "인력수급현황"."구인구직취업현황_성별"
+    WHERE "구인구직취업현황_성별"."연도"::text = '{year}'::text AND "구인구직취업현황_성별"."월"::text = '{month}'::text
+    ORDER BY (
+        CASE
+            WHEN "구인구직취업현황_성별"."성별"::text = '남'::text THEN 1
+            WHEN "구인구직취업현황_성별"."성별"::text = '여'::text THEN 2
+            WHEN "구인구직취업현황_성별"."성별"::text = '무관'::text THEN 3
+            ELSE NULL::integer
+        END)
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
