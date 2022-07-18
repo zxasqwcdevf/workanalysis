@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-def employ(db:Session ,year:str, month:str):
+def employed(db:Session ,year:str, month:str):
     sql = f"""
    SELECT
 	"5_구인구직취업현황_고용형태"."연도", 
@@ -8,23 +8,31 @@ def employ(db:Session ,year:str, month:str):
 	"5_구인구직취업현황_고용형태"."고용형태", 
 	"5_구인구직취업현황_고용형태"."구인인원", 
 	"5_구인구직취업현황_고용형태"."구직건수", 
-	"5_구인구직취업현황_고용형태"."취업건수"
+	"5_구인구직취업현황_고용형태"."취업건수" 
     FROM
 	"인력수급현황"."5_구인구직취업현황_고용형태"
     WHERE 
-    "5_구인구직취업현황_고용형태"."연도"::text = '{year}'::text AND "5_구인구직취업현황_고용형태"."월" = '{month}'::text
+    "5_구인구직취업현황_고용형태"."연도" = '{year}' AND 
+    "5_구인구직취업현황_고용형태"."월" = '{month}'
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
     result = [r._asdict() for r in data]
     return result
 
-def industry(db:Session):
+def industried(db:Session, year:str, month:str):
     sql = f"""
     SELECT
+	    "6_구인취업현황_산업분류"."연도", 
+	    "6_구인취업현황_산업분류"."월", 
+	    "6_구인취업현황_산업분류"."산업_대분류", 
+	    "6_구인취업현황_산업분류"."구인인원(월)", 
+	    "6_구인취업현황_산업분류"."취업건수(월)" *-1 AS "취업건수(월)"
     FROM
-    GROUP BY
-    ORDER BY
+	    "인력수급현황"."6_구인취업현황_산업분류"
+    WHERE
+	    "6_구인취업현황_산업분류"."연도" = '{year}' AND
+	    "6_구인취업현황_산업분류"."월" = '{month}'
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
@@ -34,28 +42,35 @@ def industry(db:Session):
 def gendered(db:Session,year:str, month:str):
     sql = f"""
     SELECT
-	"1_구직취업현황_성별"."연도", 
-	"1_구직취업현황_성별"."월", 
-	"1_구직취업현황_성별"."성별", 
-	"1_구직취업현황_성별"."구직건수", 
-	"1_구직취업현황_성별"."취업건수"
+	    "1_구직취업현황_성별"."연도", 
+	    "1_구직취업현황_성별"."월", 
+	    "1_구직취업현황_성별"."성별", 
+	    "1_구직취업현황_성별"."구직건수", 
+	    "1_구직취업현황_성별"."취업건수" *-1 AS "취업건수"
     FROM
-	"인력수급현황"."1_구직취업현황_성별"
+	    "인력수급현황"."1_구직취업현황_성별"
     WHERE
-	"1_구직취업현황_성별"."연도" = '{year}' AND
-	"1_구직취업현황_성별"."월" = '{month}'
+	    "1_구직취업현황_성별"."연도" = '{year}' AND
+	    "1_구직취업현황_성별"."월" = '{month}'
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
     result = [r._asdict() for r in data]
     return result
 
-def age(db:Session):
+def aged(db:Session,year:str,month:str):
     sql = f"""
     SELECT
+	    "2_구직취업현황_연령"."연도", 
+	    "2_구직취업현황_연령"."월", 
+	    "2_구직취업현황_연령"."연령", 
+	    "2_구직취업현황_연령"."구직건수", 
+	    "2_구직취업현황_연령"."취업건수"
     FROM
-    GROUP BY
-    ORDER BY
+	    "인력수급현황"."2_구직취업현황_연령"
+    WHERE
+	    "2_구직취업현황_연령"."연도" = '{year}' AND
+	    "2_구직취업현황_연령"."월" = '{month}'
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
@@ -75,12 +90,20 @@ def job(db:Session):
     return result
 
 
-def education(db:Session):
+def educationed(db:Session,year:str,month:str):
     sql = f"""
     SELECT
+	    "3_구인구직취업현황_학력"."연도", 
+	    "3_구인구직취업현황_학력"."월", 
+	    "3_구인구직취업현황_학력"."학력", 
+	    "3_구인구직취업현황_학력"."구인인원", 
+	    "3_구인구직취업현황_학력"."구직건수", 
+	    "3_구인구직취업현황_학력"."취업건수"
     FROM
-    GROUP BY
-    ORDER BY
+	    "인력수급현황"."3_구인구직취업현황_학력"
+    WHERE
+	    "3_구인구직취업현황_학력"."연도" = '{year}' AND
+	    "3_구인구직취업현황_학력"."월" = '{month}'
     """
     sql_result = db.execute(sql)
     data = sql_result.fetchall()
